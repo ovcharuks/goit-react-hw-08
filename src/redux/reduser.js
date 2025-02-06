@@ -1,9 +1,5 @@
 const initialState = {
-  items: [
-    { id: "id", name: "name", number: "number" },
-    { id: "id1", name: "name1", number: "number1" },
-    { id: "id2", name: "name2", number: "number2" },
-  ],
+  items: [],
   filter: "",
 };
 
