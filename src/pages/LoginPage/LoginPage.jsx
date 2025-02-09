@@ -1,4 +1,4 @@
-import LogitForm from "../../components/LoginForm/LogitForm";
+import LogitForm from "../../components/LoginForm/LoginForm";
 
 function LoginPage() {
   return (
