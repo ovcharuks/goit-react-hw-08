@@ -14,8 +14,7 @@ const ContactForm = () => {
         // id: nanoid(),
       })
     );
-    console.log(value);
-    // actions.resetForm();
+    actions.resetForm();
   };
 
   const registerSchema = Yup.object().shape({
