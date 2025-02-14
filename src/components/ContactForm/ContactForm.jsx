@@ -7,7 +7,7 @@ import { addContactThunk } from "../../redux/contacts/operations";
 
 const ContactForm = () => {
   const dispatch = useDispatch();
-  const handleSubmit = (value) => {
+  const handleSubmit = (value, actions) => {
     dispatch(
       addContactThunk({
         ...value,
