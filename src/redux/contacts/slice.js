@@ -1,6 +1,7 @@
 import { createSelector, createSlice } from "@reduxjs/toolkit";
 import { addContactThunk, deleteContact, fetchContacts } from "./operations";
-import { selectContacts, selectFilter } from "../selectors";
+import { selectFilter } from "../selectors";
+import { selectContacts } from "./selectors";
 
 const contactsSlice = createSlice({
   name: "contacts",
@@ -48,7 +49,15 @@ const contactsSlice = createSlice({
         );
       })
       .addCase(addContactThunk.fulfilled, (state, action) => {
+        console.log(
+          "state.items",
+          state.items,
+          "action.payload",
+          action.payload
+        );
         state.items.push(action.payload);
+
+        console.log("state.items after push", state.items);
       });
   },
 });

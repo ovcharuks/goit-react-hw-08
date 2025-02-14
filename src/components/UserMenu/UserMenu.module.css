@@ -1,0 +1,10 @@
+.links {
+
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: aliceblue;
+    justify-content: space-around;
+
+}

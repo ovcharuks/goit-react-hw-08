@@ -1,46 +1,73 @@
 import "./App.css";
-import ContactList from "../ContactList/ContactList";
-import ContactForm from "../ContactForm/ContactForm";
-import SearchBox from "../SearchBox/SearchBox";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { fetchContacts } from "../../redux/contacts/operations";
-import {
-  selectFilter,
-  selectIsError,
-  selectIsloading,
-} from "../../redux/selectors";
+import { Suspense, lazy, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
-import HomePage from "../../pages/HomePage/HomePage";
+
+import { Toaster } from "react-hot-toast";
+import Layout from "../Layout/Layout";
+import PublicRoute from "../PublicRoute";
+import PrivateRoute from "../PrivateRoute";
+
+import { selectIsloading } from "../../redux/selectors";
+import { refreshUserThunk } from "../../redux/auth/operations";
+import { selectIsRefreshing } from "../../redux/auth/selectors";
+
+// import HomePage from "../../pages/HomePage/HomePage";
+const HomePage = lazy(() => import("../../pages/HomePage/HomePage"));
 import NotFound from "../../pages/NotFound/NotFound";
 import ContactsPage from "../../pages/ContactsPage/ContactsPage";
 import RegistrationPage from "../../pages/RegistrationPage/RegistrationPage";
 import LoginPage from "../../pages/LoginPage/LoginPage";
-import Layout from "../Layout/Layout";
 
 function App() {
   const dispatch = useDispatch();
+  const isRefreshing = useSelector(selectIsRefreshing);
+  // useEffect(() => {
+  //   dispatch(fetchContacts());
+  // }, [dispatch]);
   useEffect(() => {
-    dispatch(fetchContacts());
+    dispatch(refreshUserThunk());
   }, [dispatch]);
-  // const isError = useSelector(selectIsError);
+
   const isLoading = useSelector(selectIsloading);
 
-  return (
+  return isRefreshing ? null : (
     <div>
-      <ContactForm />
-      <SearchBox />
-
       {isLoading && <h2>Loading .....</h2>}
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<HomePage />} />
-          <Route path="/contacts" element={<ContactsPage />} />
-        </Route>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegistrationPage />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <Suspense>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<HomePage />} />
+            <Route
+              path="/contacts"
+              element={
+                <PrivateRoute>
+                  <ContactsPage />
+                </PrivateRoute>
+              }
+            />
+          </Route>
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <LoginPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <PublicRoute>
+                <RegistrationPage />
+              </PublicRoute>
+            }
+          />
+
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
+      <Toaster />
     </div>
   );
 }
